@@ -22,6 +22,7 @@ import io.github.resilience4j.bulkhead.BulkheadRegistry
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry
 import io.github.resilience4j.ratelimiter.RateLimiterRegistry
 import io.github.resilience4j.ratpack.circuitbreaker.CircuitBreaker
+import io.github.resilience4j.retry.IntervalFunction
 import io.github.resilience4j.retry.RetryRegistry
 import io.prometheus.client.CollectorRegistry
 import ratpack.dropwizard.metrics.DropwizardMetricsModule
@@ -337,6 +338,8 @@ class Resilience4jModuleSpec extends Specification {
                     }.retry('test2') {
                         it.maxAttempts(3)
                                 .waitDurationInMillis(1000)
+                                .intervalFunction(IntervalFunction.ofDefaults())
+                                .ignoreExceptions(DummyException2)
                     }
                 }
             }
@@ -367,6 +370,9 @@ class Resilience4jModuleSpec extends Specification {
         test2.name == 'test2'
         test2.retryConfig.with {
             assert maxAttempts == 3
+            assert exceptionPredicate.test(new DummyException1('string'))
+            assert !exceptionPredicate.test(new DummyException2('string'))
+            assert intervalFunction.apply(1) == 500
             it
         }
     }

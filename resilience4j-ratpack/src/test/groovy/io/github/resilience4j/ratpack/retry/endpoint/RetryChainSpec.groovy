@@ -55,9 +55,11 @@ class RetryChainSpec extends Specification {
                 bindInstance(RetryRegistry, retryRegistry)
                 module(Resilience4jModule) {
                     it.retry('test1') {
-                        it.maxAttempts(3).waitDurationInMillis(100)
+                        it.maxAttempts(3)
+                                .waitDurationInMillis(100)
                     }.retry('test2') {
-                        it.maxAttempts(3).waitDurationInMillis(100)
+                        it.maxAttempts(3)
+                                .waitDurationInMillis(100)
                     }
                 }
             }

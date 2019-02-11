@@ -16,11 +16,16 @@
 
 package io.github.resilience4j.ratpack.retry;
 
+import io.github.resilience4j.retry.IntervalFunction;
+
 public class RetryConfig {
 
     private boolean defaults = false;
     private int maxAttempts;
     private int waitDurationInMillis;
+    private IntervalFunction intervalFunction;
+    private Class<? extends Throwable>[] ignorableExceptions;
+
 
     public RetryConfig defaults(boolean defaults) {
         this.defaults = defaults;
@@ -37,6 +42,17 @@ public class RetryConfig {
         return this;
     }
 
+    public RetryConfig intervalFunction(IntervalFunction intervalFunction) {
+        this.intervalFunction = intervalFunction;
+        return this;
+    }
+
+    @SafeVarargs
+    public final RetryConfig ignoreExceptions(Class<? extends Throwable>... exceptions) {
+        this.ignorableExceptions = exceptions;
+        return this;
+    }
+
     public boolean getDefaults() {
         return defaults;
     }
@@ -47,5 +63,13 @@ public class RetryConfig {
 
     public int getWaitDurationInMillis() {
         return waitDurationInMillis;
+    }
+
+    public IntervalFunction getIntervalFunction() {
+        return intervalFunction;
+    }
+
+    public Class<? extends Throwable>[] getIgnorableExceptions() {
+        return ignorableExceptions;
     }
 }

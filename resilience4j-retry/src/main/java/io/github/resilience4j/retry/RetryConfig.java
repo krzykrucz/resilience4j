@@ -133,7 +133,7 @@ public class RetryConfig {
 		 * @return the CircuitBreakerConfig.Builder
 		 */
 		public Builder<T> intervalFunction(IntervalFunction f) {
-			this.intervalFunction = f;
+			this.intervalFunction = f != null ? f : DEFAULT_INTERVAL_FUNCTION;
 			return this;
 		}
 

@@ -104,10 +104,14 @@ public class Resilience4jModule extends ConfigurableModule<Resilience4jConfig> {
         OptionalBinder.newOptionalBinder(binder(), BulkheadRegistry.class).setDefault().toInstance(BulkheadRegistry.ofDefaults());
 
         // event consumers
-        bind(new TypeLiteral<EventConsumerRegistry<CircuitBreakerEvent>>() {}).toInstance(new DefaultEventConsumerRegistry<>());
-        bind(new TypeLiteral<EventConsumerRegistry<RateLimiterEvent>>() {}).toInstance(new DefaultEventConsumerRegistry<>());
-        bind(new TypeLiteral<EventConsumerRegistry<RetryEvent>>() {}).toInstance(new DefaultEventConsumerRegistry<>());
-        bind(new TypeLiteral<EventConsumerRegistry<BulkheadEvent>>() {}).toInstance(new DefaultEventConsumerRegistry<>());
+        bind(new TypeLiteral<EventConsumerRegistry<CircuitBreakerEvent>>() {
+        }).toInstance(new DefaultEventConsumerRegistry<>());
+        bind(new TypeLiteral<EventConsumerRegistry<RateLimiterEvent>>() {
+        }).toInstance(new DefaultEventConsumerRegistry<>());
+        bind(new TypeLiteral<EventConsumerRegistry<RetryEvent>>() {
+        }).toInstance(new DefaultEventConsumerRegistry<>());
+        bind(new TypeLiteral<EventConsumerRegistry<BulkheadEvent>>() {
+        }).toInstance(new DefaultEventConsumerRegistry<>());
 
         // event chains
         Multibinder<HandlerDecorator> binder = Multibinder.newSetBinder(binder(), HandlerDecorator.class);
@@ -226,6 +230,8 @@ public class Resilience4jModule extends ConfigurableModule<Resilience4jConfig> {
                     retry = retryRegistry.retry(name, RetryConfig.custom()
                             .maxAttempts(retryConfig.getMaxAttempts())
                             .waitDuration(Duration.ofMillis(retryConfig.getWaitDurationInMillis()))
+                            .intervalFunction(retryConfig.getIntervalFunction())
+                            .ignoreExceptions(retryConfig.getIgnorableExceptions())
                             .build());
                 }
                 if (endpointsConfig.getRetries().isEnabled()) {
